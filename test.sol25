@@ -1,0 +1,3 @@
+class Main : Object {
+    run [ :one :two | r := Integer from: two. ]
+}
