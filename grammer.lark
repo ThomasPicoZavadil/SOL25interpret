@@ -1,0 +1,34 @@
+start: class_def+ |  // Supports multiple classes
+
+class_def: "class" CID ":" CID "{" method* "}"
+
+method: selector block
+
+selector: ID | IDSELECT*
+selector_tail: IDSELECT selector_tail |
+
+block: "[" block_par "|" assign* "]"
+block_par: parameter*
+parameter: IDDEF
+assign: ID ":=" expr "."
+
+expr: expr_base expr_tail
+expr_tail: ID | expr_sel*
+expr_sel: IDSELECT expr_base
+
+expr_base: INT | STR | ID | CID | block | "(" expr ")" | KEYWORD
+
+IDSELECT: /[a-z][a-zA-Z0-9]*:/
+IDDEF: /:[a-z][a-zA-Z0-9]*/
+CID: /[A-Z][a-zA-Z0-9]*/
+ID: /[a-z_][a-zA-Z0-9_]*/
+INT: /[0-9]+/
+STR: /'([^\'\n]|\['"n\])*'/
+
+KEYWORD: "self" | "super" | "nil" | "true" | "false"
+COMMENT: /"[^"]*"/
+ 
+
+%import common.WS
+%ignore WS
+%ignore COMMENT
